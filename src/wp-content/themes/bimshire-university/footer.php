@@ -1,0 +1,1 @@
+<h1>Greetings from Wordpress footer</h1>
