@@ -12,10 +12,16 @@
                 <div class="site-footer__col-two">
                     <h3 class="headline headline--small">Explore</h3>
                     <nav class="nav-list">
+                        <?php
+                        // example of how to embed a dynamic menu controllable from wp-admin. Appearences -> Menus
+                        // wp_nav_menu(array(
+                        //     'theme_location' => 'footer-location-1'
+                        // )) 
+                        ?>
                         <ul>
                             <li><a href="<?php echo site_url('/about-us') ?>">About Us</a></li>
                             <li><a href="#">Programs</a></li>
-                            <li><a href="#">Events</a></li>
+                            <li><a href="<?php echo get_post_type_archive_link('event') ?>">Events</a></li>
                             <li><a href="#">Campuses</a></li>
                         </ul>
                     </nav>
@@ -24,6 +30,12 @@
                 <div class="site-footer__col-three">
                     <h3 class="headline headline--small">Learn</h3>
                     <nav class="nav-list">
+                        <?php
+                        // example of how to embed a dynamic menu controllable from wp-admin.  Appearences -> Menus
+                        // wp_nav_menu(array(
+                        //     'theme_location' => 'footer-location-2'
+                        // ))
+                        ?>
                         <ul>
                             <li><a href="#">Legal</a></li>
                             <li><a href="<?php echo site_url('/privacy-policy') ?>">Privacy</a></li>
