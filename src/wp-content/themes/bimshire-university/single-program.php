@@ -88,28 +88,15 @@ while (have_posts()) {
 
             while ($most_recent_events->have_posts()) {
                 $most_recent_events->the_post();
-                $event_date = new DateTime(get_field('event_date'));
-        ?>
-                <div class="event-summary">
-                    <a class="event-summary__date t-center" href="<?php the_permalink() ?>">
-                        <span class="event-summary__month"><?php echo $event_date->format('M') ?></span>
-                        <span class="event-summary__day"><?php echo $event_date->format('d') ?></span>
-                    </a>
-                    <div class="event-summary__content">
-                        <h5 class="event-summary__title headline headline--tiny"><a href="<?php the_permalink() ?>"><?php the_title() ?></a></h5>
-                        <p>
-                            <?php
-                            if (has_excerpt()) {
-                                echo get_the_excerpt();
-                            } else {
-                                echo wp_trim_words(get_the_content(), 18);
-                            }
-                            ?>
-                            <a href="<?php the_permalink() ?>" class="nu gray">Learn more</a>
-                        </p>
-                    </div>
-                </div>
-        <?php
+                // first argument to get_template_part gives prefix of file to look for, second arg 
+                // looks for the suffix. the previx and suffix are seperated by hyphen
+                // eg below if you have a file called content-event.php in folder template-parts, then
+                // the function below will look for a file called content-event if we are dealening with 
+                // and event query  or content-professor if we are dealing with a professor query. 
+                // USE get_template_part where what you are de-duplicationg is just a static blob of html or php 
+                // where its dispay is not dependant on variables, other wise use a function if the code needs
+                // to be custommize via passing in variables that will change what is displayed from page to page.
+                get_template_part('template-parts/content', get_post_type());
             }
         }
         wp_reset_postdata(); // clean up after using a custom query. DO IT ALWAYS!!!
