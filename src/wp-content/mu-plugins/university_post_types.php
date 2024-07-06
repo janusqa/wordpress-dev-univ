@@ -50,4 +50,28 @@ function university_post_types()
     );
 
     register_post_type('program', $program_args);
+
+    // professor post_type
+    $professor_labels = array(
+        'name' => 'Professors',
+        'add_new' => 'Add New Professor',
+        'add_new_item' => 'Add New Professor',
+        'edit_item' => 'Edit Professor',
+        'all_items' => 'All Professors',
+        'singular_name' => 'Professor',
+        'search_items' => 'Search Professors',
+    );
+
+    $professor_args = array(
+        'public' => true,
+        'labels' => $professor_labels,
+        'menu_icon' => 'dashicons-welcome-learn-more', // get icons from wordpress dashicons
+        'show_in_rest' => true, // enable block editor for this post type
+        // 'has_archive' => true, // no archive needed for professor type
+        // 'rewrite' => array('slug' => 'professors'), // no need for rewrite since there will be no archive
+        'description' => 'There is something for everyone. Have a look around.',
+        'supports' => array('title', 'editor', 'thumbnail'), # will use Advanced Custom Fields plugin to implement custom fields
+    );
+
+    register_post_type('professor', $professor_args);
 }

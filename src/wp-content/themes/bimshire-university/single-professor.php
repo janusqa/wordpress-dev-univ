@@ -6,19 +6,17 @@ while (have_posts()) {
 ?>
     <?php page_banner(); ?>
     <div class="container container--narrow page-section">
-        <div class="metabox metabox--position-up metabox--with-home-link">
-            <p>
-                <a class="metabox__blog-home-link" href="<?php echo get_post_type_archive_link('event') ?>">
-                    <i class="fa fa-home" aria-hidden="true"></i> Events Home
-                </a> <span class="metabox__main"><?php the_title() ?></span>
-            </p>
+        <div class="generic-content">
+            <div class="row group">
+                <div class="one-third"><?php the_post_thumbnail('professor_portrait'); ?></div>
+                <div class="two-third"><?php the_content(); ?></div>
+            </div>
         </div>
-        <div class="generic-content"><?php the_content() ?></div>
         <?php
         $related_programs = get_field('related_programs'); // returns an array of WP_objects with meta on each object
         if ($related_programs) {
             echo '<hr class="section-break" />';
-            echo '<h2 class="headline hedline--medium">Related Programs</h2>';
+            echo '<h2 class="headline hedline--medium">Subject(s) Taught</h2>';
             echo '<ul class="link-list min-list">';
 
             foreach ($related_programs as $program) { //$program is a WP_post object 

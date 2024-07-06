@@ -4,15 +4,7 @@ get_header();
 while (have_posts()) {
     the_post();
 ?>
-    <div class="page-banner">
-        <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('images/ocean.jpg') ?>)"></div>
-        <div class="page-banner__content container container--narrow">
-            <h1 class="page-banner__title"><?php the_title() ?></h1>
-            <div class="page-banner__intro">
-                <p>DO NOT FORGET TO REPLACE ME LATER</p>
-            </div>
-        </div>
-    </div>
+    <?php page_banner(); ?>
     <div class="container container--narrow page-section">
         <div class="metabox metabox--position-up metabox--with-home-link">
             <p>
@@ -23,6 +15,47 @@ while (have_posts()) {
         </div>
         <div class="generic-content"><?php the_content() ?></div>
 
+        <!-- Related professors -->
+        <?php
+        $related_professors = new WP_Query(array(
+            'posts_per_page' => -1,
+            // 'category_name' => 'awards',
+            'post_type' => 'professor',
+            'orderby' => 'title', # sort by a custom field in your post type
+            // 'orderby' => 'meta_value', # this is more suited for sorting textual fields
+            // 'meta_key' => 'event_date', # this is the field to sort by
+            'order' => 'ASC',
+            'meta_query' => array( // filter post within the base query. Example filter out all most whose date has past the current date
+                array(
+                    'key' => 'related_programs', // relate_programs is a serialized string of which the event id will be part of surrouned by double quotes
+                    'compare' => 'LIKE',
+                    'value' => '"' . get_the_ID() . '"',
+                    'type' => 'char'
+                ),
+            ),
+        ));
+
+        if ($related_professors->have_posts()) {
+            echo '<hr class="section-break" />';
+            echo '<h2 class="headline headline--medium">' . get_the_title() . ' Professors</h2>';
+            echo '<ul class="professor-cards">';
+            while ($related_professors->have_posts()) {
+                $related_professors->the_post();
+        ?>
+                <li class="professor-card__list-item">
+                    <a class="professor-card" href="<?php the_permalink() ?>">
+                        <img class="professor-card__image" src="<?php the_post_thumbnail_url('professor_landscape') ?>" />
+                        <span class="professor-card__name"><?php the_title() ?></span>
+                    </a>
+                </li>
+        <?php
+            }
+            echo '</ul>';
+        }
+        wp_reset_postdata(); // clean up after using a custom query. DO IT ALWAYS!!!
+        ?>
+
+        <!-- Related events -->
         <?php
         $today = date('Ymd');
         $most_recent_events = new WP_Query(array(
