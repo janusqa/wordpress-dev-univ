@@ -22,6 +22,22 @@ while (have_posts()) {
             </p>
         </div>
         <div class="generic-content"><?php the_content() ?></div>
+        <?php
+        $related_programs = get_field('related_programs'); // returns an array of WP_objects with meta on each object
+        if ($related_programs) {
+            echo '<div class="generic-content"><?php the_content() ?></div>';
+            echo '<hr class="section-break" />';
+            echo '<h2 class="headline hedline--medium">Related Programs</h2>';
+            echo '<ul class="link-list min-list">';
+
+            foreach ($related_programs as $program) { //$program is a WP_post object 
+        ?>
+                <li><a href="<?php echo get_the_permalink($program) ?>"><?php echo get_the_title($program); ?></a></li>
+        <?php }
+
+            echo '</ul>';
+        }
+        ?>
     </div>
 <?php
 }
