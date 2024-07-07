@@ -112,13 +112,14 @@ __webpack_require__.r(__webpack_exports__);
 
 class Search {
   constructor() {
-    this.isOverLayOpen = false;
-    this.isSpinnerVisible = false;
+    this.addSearchUI();
     this.searchOverlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.search-overlay');
     this.openButton = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.js-search-trigger');
     this.closeButton = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.search-overlay__close');
     this.searchField = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#search-term');
     this.searchResults = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.search-overlay__results');
+    this.isOverLayOpen = false;
+    this.isSpinnerVisible = false;
     this.debounce;
     this.previousSearchText;
     this.events();
@@ -130,6 +131,8 @@ class Search {
     this.searchField.on('keyup', this.processSearchTerm.bind(this));
   }
   openOverlay() {
+    this.searchField.val('');
+    this.searchResults.html('');
     this.searchOverlay.addClass('search-overlay--active');
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').addClass('body-no-scroll');
     this.isOverLayOpen = true;
@@ -145,12 +148,12 @@ class Search {
   processSearchTerm(e) {
     if (this.searchField.val() !== this.previousSearchText) {
       clearTimeout(this.debounce);
-      if (this.searchField.val().trim()) {
+      if (this.searchField.val()) {
         if (!this.isSpinnerVisible) {
           this.searchResults.html('<div class="spinner-loader"></div>');
           this.isSpinnerVisible = true;
         }
-        this.debounce = setTimeout(this.getResults.bind(this), 2000);
+        this.debounce = setTimeout(this.getResults.bind(this), 500);
       } else {
         this.searchResults.html('');
         this.isSpinnerVisible = false;
@@ -159,8 +162,35 @@ class Search {
     this.previousSearchText = this.searchField.val();
   }
   getResults() {
-    this.searchResults.html('Imagine real search results');
+    const apiUrl = `${universityData.baseUrl}/wp-json/wp/v2`;
+    if (this.searchField.val().trim().length > 3) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default().when(jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${apiUrl}/posts?search=${this.searchField.val()}`), jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${apiUrl}/pages?search=${this.searchField.val()}`)).then((post, pages) => {
+        const combinedResults = [...post[0], ...pages[0]];
+        this.searchResults.html(`
+                        <h2 class="search-overlay__section-title">General Information</h2>
+                        ${combinedResults.length ? '<ul class="link-list min-list">' : '<p>No results found</p>'}
+                        ${combinedResults.map(result => `<li><a href="${result.link}">${result.title.rendered}</a></li>`).join('')}
+                        ${combinedResults.length ? '</ul>' : ''}
+                    `);
+      }, () => this.searchResults.html('<p>Unexpected error; please try again.</p>'));
+    }
     this.isSpinnerVisible = false;
+  }
+  addSearchUI() {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').append(`
+            <div class="search-overlay">
+                <div class="search-overlay__top">
+                    <div class="container">
+                        <i class="fa fa-search search-overlay__icon" aria-hidden="true"></i>
+                        <input type="text" id="search-term" class="search-term" placeholder="What are you looking for?" />
+                    </div>
+                    <i class="fa fa-window-close search-overlay__close" aria-hidden="true"></i>
+                </div>
+                <div class="container">
+                    <div class="search-overlay__results"></div>
+                </div>
+            </div>            
+        `);
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Search);

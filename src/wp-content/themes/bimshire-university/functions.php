@@ -12,6 +12,14 @@ function university_files()
     wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
     wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));
     wp_enqueue_script('university-main-js', get_theme_file_uri('/build/index.js'), array('jquery'), '1.0', true);
+
+    // this injects a varible called "universityData" into the js file tage with 'university-main-js'
+    // that is, the file located at /build/index.js. The variable consist of a js object made up
+    // from the third argument of wp_localize_script which is an associative array.
+    // This is how we can add global settings we want to make available to JS in a wordpress theme.
+    wp_localize_script('university-main-js', 'universityData', array(
+        'baseUrl' => get_site_url()
+    ));
 }
 
 function university_features()
