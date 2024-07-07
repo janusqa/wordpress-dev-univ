@@ -74,4 +74,28 @@ function university_post_types()
     );
 
     register_post_type('professor', $professor_args);
+
+    // campus post_type
+    $campus_labels = array(
+        'name' => 'Campuses',
+        'add_new' => 'Add New Campus',
+        'add_new_item' => 'Add New Campus',
+        'edit_item' => 'Edit Campus',
+        'all_items' => 'All Campuses',
+        'singular_name' => 'Campus',
+        'search_items' => 'Search Campuses',
+    );
+
+    $campus_args = array(
+        'public' => true,
+        'labels' => $campus_labels,
+        'menu_icon' => 'dashicons-location-alt', // get icons from wordpress dashicons
+        'show_in_rest' => true, // enable block editor for this post type
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'campuses'),
+        'description' => 'We have several conveniently located campuses.',
+        'supports' => array('title', 'editor', 'excerpt'), # will use Advanced Custom Fields plugin to implement custom fields
+    );
+
+    register_post_type('campus', $campus_args);
 }

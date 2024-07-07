@@ -102,6 +102,23 @@ while (have_posts()) {
         wp_reset_postdata(); // clean up after using a custom query. DO IT ALWAYS!!!
         ?>
 
+        <!-- Related Campuses -->
+        <?php
+        $related_campuses = get_field('related_campuses');
+        if ($related_campuses) {
+            echo '<hr class="section-break" />';
+            echo '<h2 class="headline headline--medium">' . get_the_title() . ' is avaliable at these campuses</h2>';
+            echo '<ul class="link-list min-list">';
+            foreach ($related_campuses as $campus) {
+        ?>
+                <li><a href="<?php echo get_the_permalink($campus) ?>"><?php echo get_the_title($campus) ?></a></li>
+        <?php
+            }
+            echo '</ul>';
+        }
+        ?>
+
+
     </div>
 <?php
 }
