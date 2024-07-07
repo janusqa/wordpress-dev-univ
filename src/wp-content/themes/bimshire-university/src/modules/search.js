@@ -64,34 +64,115 @@ class Search {
     }
 
     getResults() {
-        const apiUrl = `${universityData.baseUrl}/wp-json/wp/v2`;
+        const apiUrl = `${universityData.baseUrl}/wp-json/university/v1`;
+
         if (this.searchField.val().trim().length > 3) {
-            $.when(
-                $.getJSON(`${apiUrl}/posts?search=${this.searchField.val()}`),
-                $.getJSON(`${apiUrl}/pages?search=${this.searchField.val()}`)
-            ).then(
-                (post, pages) => {
-                    const combinedResults = [...post[0], ...pages[0]];
+            $.getJSON(
+                `${apiUrl}/search?term=${this.searchField.val()}`,
+                (results) => {
                     this.searchResults.html(`
-                        <h2 class="search-overlay__section-title">General Information</h2>
-                        ${
-                            combinedResults.length
-                                ? '<ul class="link-list min-list">'
-                                : '<p>No results found</p>'
-                        }
-                        ${combinedResults
-                            .map(
-                                (result) =>
-                                    `<li><a href="${result.link}">${result.title.rendered}</a></li>`
-                            )
-                            .join('')}
-                        ${combinedResults.length ? '</ul>' : ''}
-                    `);
-                },
-                () =>
-                    this.searchResults.html(
-                        '<p>Unexpected error; please try again.</p>'
-                    )
+                    <div class="row">
+                        <div class="one-third">
+                            <h2 class="search-overlay__section-title">General Information</h2>
+                            ${
+                                results['posts'].length
+                                    ? '<ul class="link-list min-list">'
+                                    : '<p>No results found</p>'
+                            }
+                            ${results['posts']
+                                .map(
+                                    (result) =>
+                                        `<li><a href="${result.permalink}">${
+                                            result.title
+                                        }</a> ${
+                                            result.postType == 'post'
+                                                ? ` by ${result.authorName}`
+                                                : ''
+                                        }</li>`
+                                )
+                                .join('')}
+                            ${results['posts'].length ? '</ul>' : ''}
+                        </div>
+                        <div class="one-third">
+                            <h2 class="search-overlay__section-title">Programs</h2>
+                                ${
+                                    results['programs'].length
+                                        ? '<ul class="link-list min-list">'
+                                        : '<p>No results found</p>'
+                                }
+                                ${results['programs']
+                                    .map(
+                                        (result) =>
+                                            `<li><a href="${result.permalink}">${result.title}</a></li>`
+                                    )
+                                    .join('')}
+                                ${
+                                    results['programs'].length ? '</ul>' : ''
+                                }                            
+                            <h2 class="search-overlay__section-title">Professors</h2>
+                                ${
+                                    results['professors'].length
+                                        ? '<ul class="professor-cards">'
+                                        : '<p>No results found</p>'
+                                }
+                                ${results['professors']
+                                    .map(
+                                        (result) =>
+                                            `<li class="professor-card__list-item">
+                                                <a class="professor-card" href="${result.permalink}">
+                                                    <img class="professor-card__image" src="${result.image}" />
+                                                    <span class="professor-card__name">${result.title}</span>
+                                                </a>
+                                            </li>`
+                                    )
+                                    .join('')}
+                                ${
+                                    results['professors'].length ? '</ul>' : ''
+                                }                                
+                        </div>
+                        <div class="one-third">
+                            <h2 class="search-overlay__section-title">Campuses</h2>
+                                ${
+                                    results['campuses'].length
+                                        ? '<ul class="link-list min-list">'
+                                        : '<p>No results found</p>'
+                                }
+                                ${results['campuses']
+                                    .map(
+                                        (result) =>
+                                            `<li><a href="${result.permalink}">${result.title}</a></li>`
+                                    )
+                                    .join('')}
+                                ${
+                                    results['campuses'].length ? '</ul>' : ''
+                                }                                                        
+                            <h2 class="search-overlay__section-title">Events</h2>
+                                ${
+                                    results['events'].length
+                                        ? ''
+                                        : '<p>No results found</p>'
+                                }
+                                ${results['events']
+                                    .map(
+                                        (result) =>
+                                            `<div class="event-summary">
+                                                    <a class="event-summary__date t-center" href="${result.permalink}">
+                                                        <span class="event-summary__month">${result.month}</span>
+                                                        <span class="event-summary__day">${result.day}</span>
+                                                    </a>
+                                                    <div class="event-summary__content">
+                                                        <h5 class="event-summary__title headline headline--tiny"><a href="${result.permalink}">${result.title}</a></h5>
+                                                        <p>
+                                                            ${result.summary}&nbsp;<a href="${result.permalink}" class="nu gray">Learn more</a>
+                                                        </p>
+                                                    </div>
+                                                </div>`
+                                    )
+                                    .join('')}                             
+                        </div>
+                    </div>
+                `);
+                }
             );
         }
 

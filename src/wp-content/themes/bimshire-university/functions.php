@@ -1,8 +1,10 @@
 <?php
+require get_theme_file_path('/includes/search-route.php');
 
 add_action('wp_enqueue_scripts', 'university_files'); // load css/js/fonts
 add_action('after_setup_theme', 'university_features'); // register dynamic menus made in wp-admin
-add_action('pre_get_posts', 'university_adjust_queries'); # using this to make tweaks to the query on the events archive page
+add_action('pre_get_posts', 'university_adjust_queries'); // using this to make tweaks to the query on the events archive page
+add_action('rest_api_init', 'university_custom_rest'); // hook into rest api to customize data it returns
 
 
 function university_files()
@@ -75,6 +77,20 @@ function university_adjust_queries($query)
     }
 }
 
+function university_custom_rest()
+{
+    // add a custom field to be returned by api
+    // 1st param is the posttype this applies to
+    // 2nd param is the key name you want your custom field to be named by
+    // 3r param is an array of callbacks that seeds the data that will be returned
+    // eg the below registers a field called author_name which will hold the author's
+    // name that created that post.  You can register as many of these fields as you like
+    register_rest_field('post', 'author_name', array(
+        'get_callback' => function () {
+            return get_the_author();
+        }
+    ));
+}
 
 function page_banner($args = NULL)
 {
