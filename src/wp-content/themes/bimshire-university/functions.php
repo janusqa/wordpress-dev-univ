@@ -3,10 +3,21 @@ require get_theme_file_path('/includes/search-route.php');
 
 add_action('wp_enqueue_scripts', 'university_files'); // load css/js/fonts
 add_action('after_setup_theme', 'university_features'); // register dynamic menus made in wp-admin
+
+// Wordpress Rest API
 add_action('pre_get_posts', 'university_adjust_queries'); // using this to make tweaks to the query on the events archive page
 add_action('rest_api_init', 'university_custom_rest'); // hook into rest api to customize data it returns
+add_filter('wp_insert_post_data', 'set_post_privacy', 10, 2); // set post to private when being saved. This will exclude them from being viewd in Queries
+add_filter('private_title_format', 'remove_private_prefix_from_title'); // stops post from being prefixed with "Private:" when displayed
+
+// Authentication, users, permissions
 add_action("admin_init", "redirect_subscribers_on_login"); // redirect subscriber accounts from admin dashboard to homepage on login
 add_action("wp_loaded", "hide_admin_toolbar_for_subscribers"); // hide admin toolbar for subscriber accounts
+
+// customize login screen
+add_action('login_enqueue_scripts', 'login_page_css'); // customize login screen
+add_filter("login_headerurl", "login_page_logo_destination_url"); // customize login screen
+add_filter("login_headertitle", "login_page_title"); // customize login screen
 
 
 function university_files()
@@ -22,7 +33,8 @@ function university_files()
     // from the third argument of wp_localize_script which is an associative array.
     // This is how we can add global settings we want to make available to JS in a wordpress theme.
     wp_localize_script('university-main-js', 'universityData', array(
-        'baseUrl' => get_site_url()
+        'baseUrl' => esc_url(get_site_url()), // global for holding site url
+        'nonce' => wp_create_nonce('wp_rest') // global used to authenticate logged in user against rest api
     ));
 }
 
@@ -92,6 +104,12 @@ function university_custom_rest()
             return get_the_author();
         }
     ));
+
+    register_rest_field('note', 'numNotes', array(
+        'get_callback' => function () {
+            return count_user_posts(get_current_user_id(), "note");
+        }
+    ));
 }
 
 function redirect_subscribers_on_login()
@@ -109,6 +127,51 @@ function hide_admin_toolbar_for_subscribers()
     if (count($current_user->roles) == 1 && $current_user->roles[0] == 'subscriber') {
         show_admin_bar(false);
     }
+}
+
+function login_page_logo_destination_url()
+{
+    return esc_url(site_url('/'));
+}
+
+function login_page_css()
+{
+    wp_enqueue_style('google-fonts', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
+    wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+    wp_enqueue_style('university_main_styles', get_theme_file_uri('/build/style-index.css'));
+    wp_enqueue_style('university_extra_styles', get_theme_file_uri('/build/index.css'));
+}
+
+function login_page_title()
+{
+    return get_bloginfo('name');
+}
+
+// make sure your add_filter has 2 as 4th arg so this function knows to expect 2 args
+// the third arg in add_filter is a priority in case you have multiple functions attached to the hook
+// it indicates the priorit of which function should run before which
+function set_post_privacy($post, $postarr)
+{
+    // makes some post private when saved or created to prevent them appearing in queries
+    switch ($post['post_type']) {
+        case "note":
+            if ((count_user_posts(get_current_user_id(), "note") > 4) && (!$postarr['ID'])) {
+                // if we are trying to add a new post (i.e. postarr['ID'] should be null)
+                // AND the post we are about to create will push us over limit
+                wp_send_json_error('Notes limit reached. Delete some notes.', 400);
+            }
+            if ($post['post_status'] !== 'trash') $post['post_status'] = "private";
+            $post['post_content'] = sanitize_textarea_field($post['post_content']);
+            $post['post_title'] = sanitize_text_field($post['post_title']);
+            break;
+    }
+
+    return $post;
+}
+
+function remove_private_prefix_from_title()
+{
+    return "%s";
 }
 
 function page_banner($args = NULL)

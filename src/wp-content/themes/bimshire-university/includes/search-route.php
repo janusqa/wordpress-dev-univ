@@ -6,7 +6,7 @@ function university_register_search()
 {
     // adding custom routes to the wordpress api
     register_rest_route('university/v1', 'search', array(
-        'methods' => WP_REST_SERVER::READABLE, // this const is really means 'GET'
+        'methods' => WP_REST_SERVER::READABLE, // this const  really means 'GET'
         'callback' => 'university_search_results'
     ));
 }
