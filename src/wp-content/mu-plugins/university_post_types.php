@@ -23,6 +23,8 @@ function university_post_types()
         'rewrite' => array('slug' => 'events'),
         'description' => 'See what is going on in our world.',
         'supports' => array('title', 'editor', 'excerpt'), # will use Advanced Custom Fields plugin to implement custom fields
+        'capability_type' => 'event', // allows this posttype to be configured with permissions
+        'map_meta_cap' => true, // allows this posttype to be configured with permissions 
     );
 
     register_post_type('event', $event_args);
@@ -96,6 +98,8 @@ function university_post_types()
         'rewrite' => array('slug' => 'campuses'),
         'description' => 'We have several conveniently located campuses.',
         'supports' => array('title', 'editor', 'excerpt'), # will use Advanced Custom Fields plugin to implement custom fields
+        'capability_type' => 'campus', // allows this posttype to be configured with permissions
+        'map_meta_cap' => true, // allows this posttype to be configured with permissions 
     );
 
     register_post_type('campus', $campus_args);

@@ -3,7 +3,7 @@
         <div class="group">
             <div class="site-footer__col-one">
                 <h1 class="school-logo-text school-logo-text--alt-color">
-                    <a href="<?php echo site_url() ?>"><strong>Bimshire</strong> University</a>
+                    <a href="<?php echo esc_url(site_url()) ?>"><strong>Bimshire</strong> University</a>
                 </h1>
                 <p><a class="site-footer__link" href="#">555.555.5555</a></p>
             </div>
@@ -19,10 +19,10 @@
                         // )) 
                         ?>
                         <ul>
-                            <li><a href="<?php echo site_url('/about-us') ?>">About Us</a></li>
-                            <li><a href="<?php echo get_post_type_archive_link('program') ?>">Programs</a></li>
-                            <li><a href="<?php echo get_post_type_archive_link('event') ?>">Events</a></li>
-                            <li><a href="<?php echo get_post_type_archive_link('campus') ?>">Campuses</a></li>
+                            <li><a href="<?php echo esc_url(site_url('/about-us')) ?>">About Us</a></li>
+                            <li><a href="<?php echo esc_url(get_post_type_archive_link('program')) ?>">Programs</a></li>
+                            <li><a href="<?php echo esc_url(get_post_type_archive_link('event')) ?>">Events</a></li>
+                            <li><a href="<?php echo esc_url(get_post_type_archive_link('campus')) ?>">Campuses</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -38,7 +38,7 @@
                         ?>
                         <ul>
                             <li><a href="#">Legal</a></li>
-                            <li><a href="<?php echo site_url('/privacy-policy') ?>">Privacy</a></li>
+                            <li><a href="<?php echo esc_url(site_url('/privacy-policy')) ?>">Privacy</a></li>
                             <li><a href="#">Careers</a></li>
                         </ul>
                     </nav>

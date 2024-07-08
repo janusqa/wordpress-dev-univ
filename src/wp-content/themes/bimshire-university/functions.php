@@ -5,6 +5,8 @@ add_action('wp_enqueue_scripts', 'university_files'); // load css/js/fonts
 add_action('after_setup_theme', 'university_features'); // register dynamic menus made in wp-admin
 add_action('pre_get_posts', 'university_adjust_queries'); // using this to make tweaks to the query on the events archive page
 add_action('rest_api_init', 'university_custom_rest'); // hook into rest api to customize data it returns
+add_action("admin_init", "redirect_subscribers_on_login"); // redirect subscriber accounts from admin dashboard to homepage on login
+add_action("wp_loaded", "hide_admin_toolbar_for_subscribers"); // hide admin toolbar for subscriber accounts
 
 
 function university_files()
@@ -90,6 +92,23 @@ function university_custom_rest()
             return get_the_author();
         }
     ));
+}
+
+function redirect_subscribers_on_login()
+{
+    $current_user = wp_get_current_user();
+    if (count($current_user->roles) == 1 && $current_user->roles[0] == 'subscriber') {
+        wp_redirect(esc_url(site_url('/')));
+        exit;
+    }
+}
+
+function hide_admin_toolbar_for_subscribers()
+{
+    $current_user = wp_get_current_user();
+    if (count($current_user->roles) == 1 && $current_user->roles[0] == 'subscriber') {
+        show_admin_bar(false);
+    }
 }
 
 function page_banner($args = NULL)
