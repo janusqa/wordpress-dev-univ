@@ -37,6 +37,7 @@ class Search {
         this.searchOverlay.classList.add('search-overlay--active');
         document.body.classList.add('body-no-scroll');
         this.isOverLayOpen = true;
+        return false; // disable default behaviour of anchor elements
     }
 
     closeOverlay() {
