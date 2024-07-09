@@ -51,11 +51,14 @@ while (have_posts()) {
                             ),
                         ));
 
-                        if ($likedByUserQuery->found_posts) $likedByUser = "yes";
+                        if ($likedByUserQuery->found_posts) {
+                            $likedByUser = "yes";
+                            if (isset($likedByUserQuery->posts[0]->ID)) $like_id = $likedByUserQuery->posts[0]->ID;
+                        }
                     }
 
                     ?>
-                    <span class="like-box" data-professor-id="<?php echo get_the_ID() ?>" data-exists="<?php echo $likedByUser ?>">
+                    <span class="like-box" data-like-id="<?php echo $like_id ?>" data-professor-id="<?php echo get_the_ID() ?>" data-exists="<?php echo $likedByUser ?>">
                         <i class="fa fa-heart-o" aria-hidden="true"></i>
                         <i class="fa fa-heart" aria-hidden="true"></i>
                         <span class="like-count"><?php echo $likes->found_posts ?></span>

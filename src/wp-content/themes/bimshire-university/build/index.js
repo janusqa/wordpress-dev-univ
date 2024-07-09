@@ -118,26 +118,34 @@ class Like {
           liked_professor_id
         })
       });
-      const json = await response.json();
-      if (!response.ok) throw new Error(json.data || `Response Status: ${response.status}`);
-      console.log(json);
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || `Response Status: ${response.status}`);
+      const likeCountEl = likeBox.querySelector('.like-count');
+      let likeCount = parseInt(likeCountEl.textContent, 10);
+      if (!isNaN(likeCount)) likeBox.querySelector('.like-count').textContent = ++likeCount;
+      likeBox.setAttribute('data-exists', 'yes');
+      likeBox.setAttribute('data-like-id', result.data.ID);
     } catch (error) {
       console.error(error.message);
     }
   }
   async unLike(likeBox) {
     const apiUrl = `${universityData.baseUrl}/wp-json/university/v1`;
-    const liked_professor_id = likeBox.getAttribute('data-professor-id');
+    const like_id = likeBox.getAttribute('data-like-id');
     try {
-      const response = await fetch(`${apiUrl}/likes`, {
+      const response = await fetch(`${apiUrl}/likes/${like_id}`, {
         method: 'DELETE',
         headers: {
           'X-WP-Nonce': universityData.nonce
         }
       });
-      const json = await response.json();
-      if (!response.ok) throw new Error(json.data || `Response Status: ${response.status}`);
-      console.log(json);
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || `Response Status: ${response.status}`);
+      const likeCountEl = likeBox.querySelector('.like-count');
+      let likeCount = parseInt(likeCountEl.textContent, 10);
+      if (!isNaN(likeCount)) likeBox.querySelector('.like-count').textContent = --likeCount;
+      likeBox.setAttribute('data-exists', 'no');
+      likeBox.setAttribute('data-like-id', '');
     } catch (error) {
       console.error(error.message);
     }
