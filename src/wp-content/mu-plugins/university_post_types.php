@@ -130,4 +130,31 @@ function university_post_types()
     );
 
     register_post_type('note', $note_args);
+
+    // like post_type
+    $like_labels = array(
+        'name' => 'Likes',
+        'add_new' => 'Add New LIke',
+        'add_new_item' => 'Add New Like',
+        'edit_item' => 'Edit Like',
+        'all_items' => 'All Likes',
+        'singular_name' => 'Like',
+        'search_items' => 'Search Likes',
+    );
+
+    $like_args = array(
+        'public' => false, #hide these posts from showing up anywhere, so they are private and specific to each user. Do not display in public search results or queries
+        'show_ui' => true, # if you hide post everywhere, re-enable them to show in admin dashboard
+        'labels' => $like_labels,
+        'menu_icon' => 'dashicons-heart', // get icons from wordpress dashicons
+        'show_in_rest' => false, // enable block editor for this post type AND disable default rest API, will create a total custom one
+        // 'has_archive' => true,
+        // 'rewrite' => array('slug' => 'likes'),
+        // 'description' => 'Take notes while in class',
+        'supports' => array('title'), # will use Advanced Custom Fields plugin to implement custom fields
+        // 'capability_type' => 'like', // allows this posttype to be configured with permissions
+        // 'map_meta_cap' => true, // allows this posttype to be configured with permissions 
+    );
+
+    register_post_type('like', $like_args);
 }

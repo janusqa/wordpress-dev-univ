@@ -14,9 +14,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/HeroSlider */ "./src/modules/HeroSlider.js");
 /* harmony import */ var _modules_Search__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/Search */ "./src/modules/Search.js");
 /* harmony import */ var _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/MyNotes */ "./src/modules/MyNotes.js");
+/* harmony import */ var _modules_Like__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/Like */ "./src/modules/Like.js");
 
 
 // Our modules / classes
+
 
 
 
@@ -27,6 +29,7 @@ const mobileMenu = new _modules_MobileMenu__WEBPACK_IMPORTED_MODULE_1__["default
 const heroSlider = new _modules_HeroSlider__WEBPACK_IMPORTED_MODULE_2__["default"]();
 const search = new _modules_Search__WEBPACK_IMPORTED_MODULE_3__["default"]();
 const myNotes = new _modules_MyNotes__WEBPACK_IMPORTED_MODULE_4__["default"]();
+const like = new _modules_Like__WEBPACK_IMPORTED_MODULE_5__["default"]();
 
 /***/ }),
 
@@ -71,6 +74,89 @@ class HeroSlider {
 
 /***/ }),
 
+/***/ "./src/modules/Like.js":
+/*!*****************************!*\
+  !*** ./src/modules/Like.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+class Like {
+  constructor() {
+    if (document.querySelectorAll('.like-box')) {
+      this.likeBox = document.querySelectorAll('.like-box');
+      this.events();
+    }
+  }
+  events() {
+    this.likeBox.forEach(el => el.addEventListener('click', e => {
+      e.preventDefault();
+      this.processlike(e);
+    }));
+  }
+  processlike(e) {
+    const likeBox = this.getlikeBox(e, 'span', 'data-exists');
+    if (likeBox) {
+      const likedStatus = likeBox.getAttribute('data-exists');
+      if (likedStatus === 'yes') this.unLike(likeBox);else this.like(likeBox);
+    }
+  }
+  async like(likeBox) {
+    const apiUrl = `${universityData.baseUrl}/wp-json/university/v1`;
+    const liked_professor_id = likeBox.getAttribute('data-professor-id');
+    try {
+      const response = await fetch(`${apiUrl}/likes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': universityData.nonce
+        },
+        body: JSON.stringify({
+          liked_professor_id
+        })
+      });
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.data || `Response Status: ${response.status}`);
+      console.log(json);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+  async unLike(likeBox) {
+    const apiUrl = `${universityData.baseUrl}/wp-json/university/v1`;
+    const liked_professor_id = likeBox.getAttribute('data-professor-id');
+    try {
+      const response = await fetch(`${apiUrl}/likes`, {
+        method: 'DELETE',
+        headers: {
+          'X-WP-Nonce': universityData.nonce
+        }
+      });
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.data || `Response Status: ${response.status}`);
+      console.log(json);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+  getlikeBox(e, target, attribute) {
+    let currentEl = e.target;
+    while (currentEl && currentEl !== document) {
+      if (currentEl.tagName.toLowerCase() === target && currentEl.hasAttribute(attribute)) {
+        return currentEl;
+      }
+      currentEl = currentEl.parentElement;
+    }
+    return null; // No matching target ancestor found
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Like);
+
+/***/ }),
+
 /***/ "./src/modules/MobileMenu.js":
 /*!***********************************!*\
   !*** ./src/modules/MobileMenu.js ***!
@@ -112,13 +198,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 class MyNotes {
   constructor() {
-    // this.editButtons = document.querySelectorAll('.edit-note');
-    // this.deleteButtons = document.querySelectorAll('.delete-note');
-    // this.saveButtons = document.querySelectorAll('.update-note');
-    this.notes = document.querySelector('#my-notes');
-    this.createButton = document.querySelector('.submit-note');
-    this.noteLimitMessage = document.querySelector('.note-limit-message');
-    this.events();
+    if (document.querySelector('#my-notes')) {
+      // this.editButtons = document.querySelectorAll('.edit-note');
+      // this.deleteButtons = document.querySelectorAll('.delete-note');
+      // this.saveButtons = document.querySelectorAll('.update-note');
+      this.notes = document.querySelector('#my-notes');
+      this.createButton = document.querySelector('.submit-note');
+      this.noteLimitMessage = document.querySelector('.note-limit-message');
+      this.events();
+    }
   }
   events() {
     // this.deleteButtons.forEach((el) =>

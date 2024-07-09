@@ -1,5 +1,7 @@
 <?php
 require get_theme_file_path('/includes/search-route.php');
+require get_theme_file_path('/includes/like-route.php');
+
 
 add_action('wp_enqueue_scripts', 'university_files'); // load css/js/fonts
 add_action('after_setup_theme', 'university_features'); // register dynamic menus made in wp-admin
@@ -115,16 +117,24 @@ function university_custom_rest()
 function redirect_subscribers_on_login()
 {
     $current_user = wp_get_current_user();
-    if (count($current_user->roles) == 1 && $current_user->roles[0] == 'subscriber') {
+    $is_subscriber = array_filter($current_user->roles, function ($role) {
+        return $role  === "subscriber";
+    });
+
+    if (count($current_user->roles) > 0 && $is_subscriber) {
         wp_redirect(esc_url(site_url('/')));
         exit;
     }
 }
 
+
 function hide_admin_toolbar_for_subscribers()
 {
     $current_user = wp_get_current_user();
-    if (count($current_user->roles) == 1 && $current_user->roles[0] == 'subscriber') {
+    $is_subscriber = array_filter($current_user->roles, function ($role) {
+        return $role  === "subscriber";
+    });
+    if (count($current_user->roles) > 0  && $is_subscriber) {
         show_admin_bar(false);
     }
 }

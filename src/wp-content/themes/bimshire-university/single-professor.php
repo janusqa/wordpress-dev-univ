@@ -9,7 +9,61 @@ while (have_posts()) {
         <div class="generic-content">
             <div class="row group">
                 <div class="one-third"><?php the_post_thumbnail('professor_portrait'); ?></div>
-                <div class="two-third"><?php the_content(); ?></div>
+                <div class="two-third">
+                    <?php
+                    $likes = new WP_Query(array(
+                        'post_type' => 'like',
+                        'posts_per_page' => -1,
+                        // 'category_name' => 'awards',
+                        // 'orderby' => 'meta_value_num', # sort by a custom field in your post type
+                        // 'orderby' => 'meta_value', # this is more suited for sorting textual fields
+                        // 'meta_key' => 'event_date', # this is the field to sort by
+                        // 'order' => 'ASC',
+                        'meta_query' => array( // filter post within the base query. Example filter out all most whose date has past the current date
+                            array(
+                                'key' => 'liked_professor_id',
+                                'compare' => '=',
+                                'value' => get_the_ID(),
+                                'type' => 'numeric'
+                            ),
+                        ),
+                    ));
+
+                    $likedByUser = 'no';
+
+                    if (is_user_logged_in()) {
+                        $likedByUserQuery = new WP_Query(array(
+                            'author' => get_current_user_id(),
+                            'post_type' => 'like',
+                            'posts_per_page' => -1,
+                            // 'category_name' => 'awards',
+                            // 'orderby' => 'meta_value_num', # sort by a custom field in your post type
+                            // 'orderby' => 'meta_value', # this is more suited for sorting textual fields
+                            // 'meta_key' => 'event_date', # this is the field to sort by
+                            // 'order' => 'ASC',
+                            'meta_query' => array( // filter post within the base query. Example filter out all most whose date has past the current date
+                                array(
+                                    'key' => 'liked_professor_id',
+                                    'compare' => '=',
+                                    'value' => get_the_ID(),
+                                    'type' => 'numeric'
+                                ),
+                            ),
+                        ));
+
+                        if ($likedByUserQuery->found_posts) $likedByUser = "yes";
+                    }
+
+                    ?>
+                    <span class="like-box" data-professor-id="<?php echo get_the_ID() ?>" data-exists="<?php echo $likedByUser ?>">
+                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                        <i class="fa fa-heart" aria-hidden="true"></i>
+                        <span class="like-count"><?php echo $likes->found_posts ?></span>
+                    </span>
+                    <?php
+                    the_content();
+                    ?>
+                </div>
             </div>
         </div>
         <?php

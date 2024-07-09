@@ -1,13 +1,17 @@
 class MyNotes {
     constructor() {
-        // this.editButtons = document.querySelectorAll('.edit-note');
-        // this.deleteButtons = document.querySelectorAll('.delete-note');
-        // this.saveButtons = document.querySelectorAll('.update-note');
-        this.notes = document.querySelector('#my-notes');
-        this.createButton = document.querySelector('.submit-note');
-        this.noteLimitMessage = document.querySelector('.note-limit-message');
+        if (document.querySelector('#my-notes')) {
+            // this.editButtons = document.querySelectorAll('.edit-note');
+            // this.deleteButtons = document.querySelectorAll('.delete-note');
+            // this.saveButtons = document.querySelectorAll('.update-note');
+            this.notes = document.querySelector('#my-notes');
+            this.createButton = document.querySelector('.submit-note');
+            this.noteLimitMessage = document.querySelector(
+                '.note-limit-message'
+            );
 
-        this.events();
+            this.events();
+        }
     }
 
     events() {
