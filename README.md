@@ -21,5 +21,5 @@
 
 ### Creating blocks with interactivity API
 - change to plugins folder
-- npx @wordpress/create-block@latest [<plugin-name>] --template @wordpress/create-block-interactive-template
+- npx @wordpress/create-block@latest <[plugin-name]> --template @wordpress/create-block-interactive-template
 - Activate plugin
