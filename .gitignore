@@ -54,3 +54,4 @@ src/xmlrpc.php
 /resources
 **/node_modules
 **/*-backups/
+**/build/

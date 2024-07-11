@@ -4,10 +4,46 @@
 	"name": "create-block/interactivity-quiz",
 	"version": "0.1.0",
 	"title": "Interactivity Quiz",
-	"category": "widgets",
-	"icon": "media-interactive",
-	"description": "An interactive block with the Interactivity API",
-	"example": {},
+	"category": "common",
+	"icon": "smiley",
+	"description": "Give your audience a chance to prove their compreshension.",
+	"example": {
+		"attributes": {
+			"question": "What is my name?",
+			"answer": 3,
+			"answers": [
+				"Meowsalot",
+				"BarksAlot",
+				"Froggerson",
+				"Swimley"
+			],
+			"titleAlignment": "center",
+			"bgColor": "#CFE8F1"
+		}
+	},
+	"attributes": {
+		"question": {
+			"type": "string"
+		},
+		"answers": {
+			"type": "array",
+			"default": [
+				""
+			]
+		},
+		"answer": {
+			"type": "integer",
+			"default": ""
+		},
+		"bgColor": {
+			"type": "string",
+			"default": "#EBEBEB"
+		},
+		"titleAlignment": {
+			"type": "string",
+			"default": "left"
+		}
+	},
 	"supports": {
 		"interactivity": true
 	},

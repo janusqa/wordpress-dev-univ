@@ -23,3 +23,5 @@
 - change to plugins folder
 - npx @wordpress/create-block@latest <[plugin-name]> --template @wordpress/create-block-interactive-template
 - Activate plugin
+- in edit.js surround your jsx with a ```<div {...blockProps}>YOUR JSX HERE</div>```. This allows you to interact with the block via clicking etc.
+- customize look of block with css via style.scss and editor.scss (note style.scss is loaded on both backend and front end)
