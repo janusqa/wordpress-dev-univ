@@ -1,0 +1,20 @@
+{
+  "name": "are-you-paying-attention",
+  "version": "1.0.0",
+  "description": "Are You Paying Attention?",
+  "main": "test.js",
+  "scripts": {
+    "build": "wp-scripts build src/index.jsx src/view.jsx",
+    "start": "wp-scripts start src/index.jsx src/view.jsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "JanusQA",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/scripts": "^27.9.0"
+  },
+  "dependencies": {
+    "nanoid": "^5.0.7",
+    "react-color": "^2.19.3"
+  }
+}

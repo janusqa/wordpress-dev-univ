@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "**/*.jsx": "javascriptreact",
+        "**/*.tsx": "typescriptreact"
+    },
+
+    "emmet.includeLanguages": {
+        "javascriptreact": "javascriptreact",
+        "typescriptreact": "typescriptreact"
+    },
+
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+
+    "terminal.integrated.fontFamily": "'JetBrains Mono'",
+    "terminal.integrated.gpuAcceleration": "off"
+}

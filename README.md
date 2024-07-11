@@ -17,3 +17,9 @@
 - After creating a post type go into wp-admin interface to permalinks in settings and click "save" to setup your new posttype into the system
 - create a custom "archive-YOURPOSTTYPENAME.php" based on the default archive.php file you already have and customize it to your liking.  This page will be used to display your posttype on the fontend
 - create a custom "single-YOURPOSTTYPENAME.php" based on the default archive.php file you already have and customize it to your liking.  This page will be used to display your posttype on the fontend
+
+
+### Creating blocks with interactivity API
+- change to plugins folder
+- npx @wordpress/create-block@latest [<plugin-name>] --template @wordpress/create-block-interactive-template
+- Activate plugin
