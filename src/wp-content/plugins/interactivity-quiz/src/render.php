@@ -10,6 +10,13 @@
  *
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
+
+$block_unique_id = wp_generate_uuid4();
+
+// This is global state accessible across blocks in JS. See "view.js"
+// it can be set in multiple block plugins and it will be inteligently merged by wordpress.
+wp_interactivity_state('create-block', array('solvedCount' => 0, 'skyColor' => 'blue'));
+
 $block_answers = array();
 foreach ($attributes['answers'] as $key => $answer) {
 	$block_answers[] = array('answerIndex' => $key, 'answerText' => $answer);
@@ -20,8 +27,11 @@ $block_context = array(
 	'correctAnswer' => $attributes['answer'],
 	'isCorrect' => false,
 	'isIncorrect' => false,
-	'isAnswered' => false
+	'isAnswered' => false,
+	'blockId' => $block_unique_id
 );
+
+
 ?>
 
 <!-- 
@@ -46,7 +56,7 @@ $block_context = array(
 </div>
 -->
 
-<div style="background-color: <?php echo $attributes['bgColor'] ?>; text-align: <?php echo $attributes['titleAlignment'] ?>;" class="paying-attention-view" data-wp-interactive="create-block" <?php echo wp_interactivity_data_wp_context($block_context) ?>>
+<div id=<?php echo $block_unique_id ?> style="background-color: <?php echo $attributes['bgColor'] ?>; text-align: <?php echo $attributes['titleAlignment'] ?>;" class="paying-attention-view" data-wp-interactive="create-block" <?php echo wp_interactivity_data_wp_context($block_context) ?>>
 	<p><?php echo $attributes['question'] ?></p>
 	<ul>
 		<!--

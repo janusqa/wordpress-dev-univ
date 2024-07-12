@@ -3,7 +3,7 @@
  */
 import { store, getContext } from '@wordpress/interactivity';
 
-store('create-block', {
+const { state } = store('create-block', {
     actions: {
         // buttonHandler: () => {
         //     const context = getContext();
@@ -17,8 +17,9 @@ store('create-block', {
             const context = getContext();
 
             const resetIsIncorrect = () => {
-                const incorrectMessageElement =
-                    document.querySelector('.incorrect-message');
+                const incorrectMessageElement = document
+                    .getElementById(context.blockId)
+                    .querySelector('.incorrect-message');
                 if (incorrectMessageElement) {
                     const handleAnimationEnd = () => {
                         context.isIncorrect = false;
@@ -41,11 +42,13 @@ store('create-block', {
                 context.isCorrect =
                     context.correctAnswer === context.answerIndex;
                 context.isIncorrect = !context.isCorrect;
-                if (context.isCorrect)
+                if (context.isCorrect) {
+                    state.solvedCount++;
                     setTimeout(
                         () => (context.isAnswered = context.isCorrect),
                         750
                     );
+                }
                 if (context.isIncorrect) resetIsIncorrect();
             }
         },
