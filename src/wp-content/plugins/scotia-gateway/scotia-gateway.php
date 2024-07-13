@@ -98,7 +98,7 @@ class ScotiaGateWayPlugin
 		$failure_class = isset($data['fail_rc']) ?  " order-card-header--failure" : "";
 		$order_status_title = isset($data['fail_rc']) ? $data["fail_reason"] : $data["associationResponseMessage"];
 		$html_response =
-			'<p class="order-message">' . $data["bname"] . ', here is your order status.</p>' . PHP_EOL .
+			'<!DOCTYPE html><html lang="en"><body><p class="order-message">' . $data["bname"] . ', here is your order status.</p>' . PHP_EOL .
 			'<div class="order-status-card">' . PHP_EOL .
 			'<div class="order-card-header' . $failure_class . '">' . $order_status_title . '</div>' . PHP_EOL .
 			'<div class="order-card-body">' . PHP_EOL .
@@ -106,7 +106,7 @@ class ScotiaGateWayPlugin
 			'<p>Total: ' . $data["chargetotal"] . '</p>' . PHP_EOL .
 			'<p>Paid with: ' . $data["ccbrand"] . '</p>' . PHP_EOL .
 			'</div>' . PHP_EOL .
-			'</div>' . PHP_EOL;
+			'</div>' . PHP_EOL . '</body></html>';
 
 		if (isset($data['fail_rc'])) {
 			return new WP_Error('gateway_order_fail', "Oops! Gateway response failed validation check.", array('status' => 400, 'html' => $html_response));

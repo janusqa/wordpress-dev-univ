@@ -1,6 +1,8 @@
 const receiveMessage = async (event) => {
     if (event.origin !== 'https://test.ipg-online.com') return;
 
+    const iframe = document.querySelector("iframe[name='scotiaFrame']");
+
     try {
         const response = await fetch(event.data.redirectURL, {
             method: 'POST',
@@ -20,9 +22,10 @@ const receiveMessage = async (event) => {
             );
 
         //show success page
+        iframe.contentDocument.body.innerHTML = result.data.html_content;
     } catch (error) {
-        console.log(error.message);
         // show error page with
+        iframe.contentDocument.body.innerHTML = result.data.html_content;
     }
 };
 
