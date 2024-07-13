@@ -1,0 +1,103 @@
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+ /* Add this to your CSS file */
+
+ .product-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f7f7f7;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.product-container span {
+    font-size: 1rem;
+}
+
+.product-container .product-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.product-container .price {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+.product-container .currency {
+    color: #16a085;
+}
+
+.product-container .checkout-button {
+    margin-left: auto;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    cursor:pointer;
+}
+
+.product-container .checkout-button:hover {
+    background-color: #2980b9;
+}
+
+.iframe-container {
+    background-color: #f8f9fa; /* Match background with product container */
+    border-radius: 5px; /* Adjust to match product container */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Match box shadow */
+    overflow: hidden;
+    margin-top: 10px; /* Adjust top margin as needed */
+}
+
+.iframe-container iframe {
+    width: 100%;
+    height: calc(100vh - 50px);
+    border: none;
+    border-radius: 5px; /* Adjust to match product container */
+}
+
+.order-message {
+    margin: 1rem 0;
+}
+
+.order-status-card {
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 400px;
+    margin: 1rem 0;
+}
+
+.order-card-header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.order-card-body {
+    padding: 1rem;
+}
+
+.order-card-body p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.order-card-header--failure {
+    background-color:#c0392b;
+}
