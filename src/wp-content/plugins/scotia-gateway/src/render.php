@@ -16,7 +16,6 @@ global $post;
 $block_unique_id = wp_generate_uuid4();
 
 $timezone = "America/Barbados";
-// $site_url = "hierlife.net";
 
 $temp_tz = date_default_timezone_get();
 date_default_timezone_set($timezone);
@@ -46,7 +45,7 @@ $block_context = array(
 
 ?>
 
-<div id="<?php echo $block_unique_id ?>" class="hierlife-meeting-view" data-wp-interactive="create-block" <?php echo wp_interactivity_data_wp_context($block_context) ?> style="display: flex; flex-direction: column; gap: 0.2rem; height: 100vh; padding: 1rem;">
+<div id="<?php echo $block_unique_id ?>" class="scotia-gateway-view" data-wp-interactive="create-block" <?php echo wp_interactivity_data_wp_context($block_context) ?> style="display: flex; flex-direction: column; gap: 0.2rem; height: 100vh; padding: 1rem;">
 	<form method="POST" target="scotiaFrame" action="https://test.ipg-online.com/connect/gateway/processing">
 		<div class="product-container">
 			<span class="product-name">Product: <?php echo get_the_title($post->ID); ?></span>
