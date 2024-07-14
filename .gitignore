@@ -55,4 +55,5 @@ src/xmlrpc.php
 **/node_modules
 **/*-backups/
 **/build/
-**/includes/env.php
+**/env.php
+**/Env.php
