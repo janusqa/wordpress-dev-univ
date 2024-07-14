@@ -1,4 +1,7 @@
-const receiveMessage = async (event) => {
+export const processGatewayResponse = async (event, context) => {
+    console.log('scotia.js', event);
+    console.log('scotia.js', context);
+
     if (event.origin !== 'https://test.ipg-online.com') return;
 
     const iframe = document.querySelector("iframe[name='scotiaFrame']");
@@ -29,4 +32,4 @@ const receiveMessage = async (event) => {
     }
 };
 
-window.addEventListener('message', receiveMessage, false);
+// window.addEventListener('message', receiveMessage, false);

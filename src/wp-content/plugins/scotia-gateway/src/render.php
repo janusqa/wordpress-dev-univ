@@ -45,7 +45,7 @@ $block_context = array(
 
 ?>
 
-<div id="<?php echo $block_unique_id ?>" class="scotia-gateway-view" data-wp-interactive="create-block" <?php echo wp_interactivity_data_wp_context($block_context) ?> style="display: flex; flex-direction: column; gap: 0.2rem; height: 100vh; padding: 1rem;">
+<div data-wp-on-async-window--message="actions.processWindowMessage" id="<?php echo $block_unique_id ?>" class="scotia-gateway-view" data-wp-interactive="create-block" <?php echo wp_interactivity_data_wp_context($block_context) ?> style="display: flex; flex-direction: column; gap: 0.2rem; height: 100vh; padding: 1rem;">
 	<form method="POST" target="scotiaFrame" action="https://test.ipg-online.com/connect/gateway/processing">
 		<div class="product-container">
 			<span class="product-name">Product: <?php echo get_the_title($post->ID); ?></span>
@@ -60,5 +60,5 @@ $block_context = array(
 			<button type="submit" class="checkout-button">Checkout</button>
 		</div>
 	</form>
-	<iframe class="iframe-container" name="scotiaFrame" style="width: 100%; height: calc(100vh - 50px); border: none;"></iframe>
+	<iframe data-wp-on-async-window--message="actions.scotiaResponse" class="iframe-container" name="scotiaFrame" style="width: 100%; height: calc(100vh - 50px); border: none;"></iframe>
 </div>

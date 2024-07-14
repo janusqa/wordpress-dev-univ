@@ -23,7 +23,7 @@
 			"default": ""
 		},
 		"product_price": {
-			"type": "string",
+			"type": "number",
 			"default": ""
 		},
 		"order_approval_code": {

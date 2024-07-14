@@ -18,9 +18,6 @@ if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
 
-require_once plugin_dir_path(__FILE__) . "includes/env.php";
-require_once plugin_dir_path(__FILE__) . "includes/utils.php";
-
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
  * Behind the scenes, it registers also all assets so they can be enqueued
@@ -33,9 +30,13 @@ class ScotiaGateWayPlugin
 {
 	function __construct()
 	{
+		require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+		require_once plugin_dir_path(__FILE__) . "includes/env.php";
+		require_once plugin_dir_path(__FILE__) . "includes/utils.php";
+		require_once plugin_dir_path(__FILE__) . "includes/options-page.php";
+
 		register_activation_hook(__FILE__, [$this, 'plugin_activation']);
 		register_deactivation_hook(__FILE__, [$this, 'plugin_deactivation']);
-		add_action('init', [$this, 'register_custom_types']);
 		add_action('init', [$this, 'create_block_scotia_gateway_block_init']);
 		add_action('rest_api_init', array($this, 'create_block_api_routes'));
 	}
@@ -43,6 +44,7 @@ class ScotiaGateWayPlugin
 	function create_block_scotia_gateway_block_init()
 	{
 		register_block_type_from_metadata(__DIR__ . '/build');
+		$this->register_custom_types();
 	}
 
 	function register_custom_types()
@@ -55,7 +57,7 @@ class ScotiaGateWayPlugin
 			'edit_item' => 'Edit Meeting',
 			'all_items' => 'All Meetings',
 			'singular_name' => 'Meeting',
-			'search_items' => 'Search Meeting',
+			'search_items' => 'Search Meetings',
 		);
 
 		$meeting_args = array(
@@ -63,13 +65,46 @@ class ScotiaGateWayPlugin
 			'labels' => $meeting_labels,
 			'menu_icon' => 'dashicons-schedule', // get icons from wordpress dashicons
 			'show_in_rest' => true, // enable block editor for this post type
-			// 'has_archive' => true,
-			// 'rewrite' => array('slug' => 'meetings'),
+			'has_archive' => true,
+			'rewrite' => array('slug' => 'meetings'),
 			'description' => 'There is something for everyone. Have a look around.',
 			'supports' => array('title', 'editor'), # will use Advanced Custom Fields plugin to implement custom fields
 		);
 
 		register_post_type('meeting', $meeting_args);
+
+		// order post_type
+		$order_labels = array(
+			'name' => 'Orders',
+			'add_new' => 'Add New Order',
+			'add_new_item' => 'Add New Order',
+			'edit_item' => 'Edit Order',
+			'all_items' => 'All Orders',
+			'singular_name' => 'Order',
+			'search_items' => 'Search Orders',
+		);
+
+		$order_args = array(
+			'public' => false, #hide these posts from showing up anywhere, so they are private and specific to each user. Do not display in public search results or queries
+			'show_ui' => true, # if you hide post everywhere, re-enable them to show in admin dashboard
+			'show_in_rest' => false,
+			'labels' => $order_labels,
+			'menu_icon' => 'dashicons-store',
+			'has_archive' => false,
+			// 'rewrite' => array('slug' => 'orders'),
+			'supports' => array('title'),
+			'exclude_from_search' => true,
+			'publicly_queryable' => false,
+			'capability_type' => 'post',
+			'capabilities' => array(
+				'create_posts' => 'do_not_allow',
+				'edit_posts' => 'do_not_allow'
+			),
+			'map_meta_cap' => true,
+		);
+
+		// register_post_type('order', $order_args);
+
 	}
 
 	function create_block_api_routes()

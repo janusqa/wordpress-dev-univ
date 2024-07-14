@@ -1,0 +1,12 @@
+{
+    "name": "janusqa/scotia-gateway",
+    "type": "project",
+    "authors": [
+        {
+            "name": "JanusQA"
+        }
+    ],
+    "require": {
+        "htmlburger/carbon-fields": "^3.6"
+    }
+}

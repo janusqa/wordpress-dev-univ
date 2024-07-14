@@ -7,21 +7,24 @@ const Product = ({ attributes, setAttributes }) => {
         <TextControl
             label="Meeting Code:"
             value={attributes.product_code}
+            required={true}
             onChange={(value) => setAttributes({ product_code: value })}
             style={{ fontSize: '20px' }}
         />
         <TextControl
             label="Price (USD):"
             value={attributes.product_price}
-            onChange={(value) => setAttributes({ product_price: value })}
+            type='number'
+            required={true}
+            onChange={(value) => setAttributes({ product_price: parseFloat(value) })}
             style={{ fontSize: '20px' }}
         />
-        <Button
+        {/* <Button
             variant="primary"
             onClick={() => {
                 setAttributes({ answers: [...attributes.answers, ''] });
             }}
-        >Create / Edit Product</Button>
+        >Create / Edit Product</Button> */}
     </div>
 };
 

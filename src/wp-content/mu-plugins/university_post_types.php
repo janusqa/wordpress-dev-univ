@@ -73,7 +73,7 @@ function university_post_types()
         // 'rewrite' => array('slug' => 'professors'), // no need for rewrite since there will be no archive
         'description' => 'There is something for everyone. Have a look around.',
         'supports' => array('title', 'editor', 'thumbnail'), # will use Advanced Custom Fields plugin to implement custom fields
-        'show_in_restest' => true, # make this post type available in wordpress's ret api
+        'show_in_rest' => true, # make this post type available in wordpress's ret api
     );
 
     register_post_type('professor', $professor_args);
