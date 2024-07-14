@@ -14,12 +14,18 @@
  * @package           create-block
  */
 
-use JanusQA\includes\ScotiaGateWayEnv;
-use JanusQA\includes\ScotiaGatewayUtils;
-
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
+
+require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+// require_once plugin_dir_path(__FILE__) . "Classes/Env.php";
+// require_once plugin_dir_path(__FILE__) . "Classes/Utils.php";
+// require_once plugin_dir_path(__FILE__) . "Classes/Options.php";
+
+use JanusQA\Env;
+use JanusQA\Options;
+use JanusQA\Utils;
 
 /**
  * Registers the block using the metadata loaded from the `block.json` file.
@@ -33,10 +39,7 @@ class ScotiaGateWayPlugin
 {
 	function __construct()
 	{
-		require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-		require_once plugin_dir_path(__FILE__) . "includes/env.php";
-		require_once plugin_dir_path(__FILE__) . "includes/utils.php";
-		require_once plugin_dir_path(__FILE__) . "includes/options-page.php";
+		new Options();
 
 		register_activation_hook(__FILE__, array($this, 'plugin_activation'));
 		register_deactivation_hook(__FILE__, array($this, 'plugin_deactivation'));
@@ -164,8 +167,8 @@ class ScotiaGateWayPlugin
 	function scotia_gateway_validate_response($response_data)
 	{
 		$order_details = array();
-		array_push($order_details, $response_data['approval_code'], $response_data['chargetotal'], $response_data['currency'], $response_data['txndatetime'], ScotiaGateWayEnv::get_store_name());
-		$hash_extended = ScotiaGateWayUtils::get_extended_hash($order_details);
+		array_push($order_details, $response_data['approval_code'], $response_data['chargetotal'], $response_data['currency'], $response_data['txndatetime'], Env::get_store_name());
+		$hash_extended = Utils::get_extended_hash($order_details);
 
 		return ($hash_extended === $response_data['response_hash']);
 	}

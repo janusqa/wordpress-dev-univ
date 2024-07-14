@@ -11,8 +11,8 @@
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
 
-use JanusQA\includes\ScotiaGateWayEnv;
-use JanusQA\includes\ScotiaGatewayUtils;
+use JanusQA\Env;
+use JanusQA\Utils;
 
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
@@ -31,17 +31,17 @@ $order_details = array(
 	"checkoutoption" => "combinedpage",
 	"currency" => "840", //BBD:052, USD:840
 	"hash_algorithm" => "HMACSHA256",
-	"parentUri" =>   $site_url,
+	"parentUri" =>   get_site_url(),
 	"responseFailURL" =>  rest_url("scotia-gateway/v1/callback/error"),
 	"responseSuccessURL" =>  rest_url("scotia-gateway/v1/callback/success"),
-	"storename" => ScotiaGateWayEnv::get_store_name(),
+	"storename" => Env::get_store_name(),
 	"timezone" => $timezone,
 	"txndatetime" => date('Y:m:d-H:i:s'),
 	"txntype" => "sale",
 );
 date_default_timezone_set($temp_tz);
 
-$hash_extended = ScotiaGateWayUtils::get_extended_hash($order_details);
+$hash_extended = Utils::get_extended_hash($order_details);
 
 $block_context = array(
 	'product_code' => $attributes['product_code'],
@@ -63,7 +63,7 @@ $block_context = array(
 				echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '" />' . PHP_EOL;
 			}
 			?>
-			<input type="hidden" name="hashExtended" value="<?php echo ScotiaGatewayUtils::get_extended_hash($order_details, $shared_secret); ?>" />
+			<input type="hidden" name="hashExtended" value="<?php echo Utils::get_extended_hash($order_details); ?>" />
 			<button type="submit" class="checkout-button">Checkout</button>
 		</div>
 	</form>

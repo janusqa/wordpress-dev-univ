@@ -1,6 +1,6 @@
 <?php
 
-namespace JanusQA\includes;
+namespace JanusQA;
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
-class ScotiaGatewayCustomOptions
+class Options
 {
 
     function __construct()
@@ -38,4 +38,4 @@ class ScotiaGatewayCustomOptions
     }
 }
 
-$scotiaGatewayCustomOptions = new ScotiaGatewayCustomOptions();
+// $scotiaGatewayCustomOptions = new Options();
