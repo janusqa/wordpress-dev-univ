@@ -14,6 +14,9 @@
  * @package           create-block
  */
 
+use JanusQA\includes\ScotiaGateWayEnv;
+use JanusQA\includes\ScotiaGatewayUtils;
+
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
@@ -35,10 +38,19 @@ class ScotiaGateWayPlugin
 		require_once plugin_dir_path(__FILE__) . "includes/utils.php";
 		require_once plugin_dir_path(__FILE__) . "includes/options-page.php";
 
-		register_activation_hook(__FILE__, [$this, 'plugin_activation']);
-		register_deactivation_hook(__FILE__, [$this, 'plugin_deactivation']);
-		add_action('init', [$this, 'create_block_scotia_gateway_block_init']);
+		register_activation_hook(__FILE__, array($this, 'plugin_activation'));
+		register_deactivation_hook(__FILE__, array($this, 'plugin_deactivation'));
+
+		add_action('init', array($this, 'create_block_scotia_gateway_block_init'));
+
+		add_action('admin_init', array($this, 'enable_search_for_custom_fields'));
+
 		add_action('rest_api_init', array($this, 'create_block_api_routes'));
+		add_filter('wp_insert_post_data', array($this, 'set_post_privacy'), 10, 2);
+
+		add_action('add_meta_boxes', array($this, 'create_orders_meta_box'));
+		add_filter('manage_order_posts_columns', array($this, 'order_posts_columns'));
+		add_action('manage_order_posts_custom_column', array($this, 'order_posts_custom_column'), 10, 2);
 	}
 
 	function create_block_scotia_gateway_block_init()
@@ -92,7 +104,7 @@ class ScotiaGateWayPlugin
 			'menu_icon' => 'dashicons-store',
 			'has_archive' => false,
 			// 'rewrite' => array('slug' => 'orders'),
-			'supports' => array('title'),
+			'supports' => false,
 			'exclude_from_search' => true,
 			'publicly_queryable' => false,
 			'capability_type' => 'post',
@@ -103,8 +115,7 @@ class ScotiaGateWayPlugin
 			'map_meta_cap' => true,
 		);
 
-		// register_post_type('order', $order_args);
-
+		register_post_type('order', $order_args);
 	}
 
 	function create_block_api_routes()
@@ -153,10 +164,88 @@ class ScotiaGateWayPlugin
 	function scotia_gateway_validate_response($response_data)
 	{
 		$order_details = array();
-		array_push($order_details, $response_data['approval_code'], $response_data['chargetotal'], $response_data['currency'], $response_data['txndatetime'], get_store_name());
-		$hash_extended = get_extended_hash($order_details);
+		array_push($order_details, $response_data['approval_code'], $response_data['chargetotal'], $response_data['currency'], $response_data['txndatetime'], ScotiaGateWayEnv::get_store_name());
+		$hash_extended = ScotiaGateWayUtils::get_extended_hash($order_details);
 
 		return ($hash_extended === $response_data['response_hash']);
+	}
+
+	function set_post_privacy($post, $postarr)
+	{
+		// makes some post private when saved or created to prevent them appearing in queries
+		switch ($post['post_type']) {
+			case "order":
+				if ($post['post_status'] !== 'trash') $post['post_status'] = "private";
+				break;
+		}
+
+		return $post;
+	}
+
+	function create_orders_meta_box()
+	{
+		add_meta_box('scotia_order_details', 'Meeting Order', array($this, 'dispay_order_detail', 'order'));
+	}
+
+	function dispay_order_detail()
+	{
+		// get_post_meta(get_the_ID(), 'bname', true)
+
+		$post_meta = get_post_meta(get_the_ID());
+		echo '<ul>';
+		foreach ($post_meta as $key => $value) {
+			echo '<li>' . '<strong>' . $key . ':</strong> ' . $value[0] . '</li>';
+		}
+		echo '</ul>';
+	}
+
+	function order_posts_columns($columns)
+	{
+		// TODO: Update array with the custom meta fields of an order
+		return array_merge($columns, array(
+			'bname' => 'Name'
+		));
+	}
+
+	function order_posts_custom_column($column, $post_id)
+	{
+		// TODO: scaffold out the columns you wish to see on orders list in admin
+		switch ($column) {
+			case "bname":
+				echo get_post_meta($post_id, $column, true);
+				break;
+		}
+	}
+
+	function enable_search_for_custom_fields()
+	{
+		global $typenow;
+
+		if ($typenow === 'order') add_filter('posts_search', array($this, 'order_search_override'), 10, 2);
+	}
+
+	function order_search_override($search, $query)
+	{
+		// TODO: adjust the sql below to actually use the fields of the order custom post type
+		global $wpdb;
+
+		if ($query->is_main_query() && !empty($query->query['s'])) {
+			$sql = "
+					or exists (
+						select * from {$wpdb->postmeta} where post_id={$wpdb->posts}.ID
+						and meta_key in ('name','email','phone')
+						and meta_value like %s
+					)
+				";
+			$like   = '%' . $wpdb->esc_like($query->query['s']) . '%';
+			$search = preg_replace(
+				"#\({$wpdb->posts}.post_title LIKE [^)]+\)\K#",
+				$wpdb->prepare($sql, $like),
+				$search
+			);
+		}
+
+		return $search;
 	}
 
 	function plugin_activation()
