@@ -25,6 +25,7 @@ class Options
 
     function create_options_page()
     {
+        /** @disregard P1013 as set_icon really exists and runs just fine */
         Container::make('theme_options', __('Scotia Options'))
             ->set_icon('dashicons-bank')
             ->add_fields(array(
