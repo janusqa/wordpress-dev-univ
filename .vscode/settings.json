@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "**/*.jsx": "javascriptreact",
-        "**/*.tsx": "typescriptreact"
+        "**/*.tsx": "typescriptreact",
+        "**/*.html": "html"
     },
 
     "emmet.includeLanguages": {

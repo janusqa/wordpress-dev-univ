@@ -1,0 +1,20 @@
+{
+  "name": "bimshire-university",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "wp-scripts start src/index.js our-blocks/*.jsx",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@glidejs/glide": "^3.6.2",
+    "axios": "^1.7.2",
+    "normalize.css": "^8.0.1"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^28.2.0"
+  }
+}
